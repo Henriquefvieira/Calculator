@@ -1,21 +1,29 @@
-def calculator(operation, primary_value, secondary_value):
-    if operation =='+':
-        return primary_value + secondary_value
-    elif operation =='-':
-        return primary_value - secondary_value
-    elif operation =='*':
-        return primary_value * secondary_value
-    elif operation =='/':
-        if secondary_value != 0:
-            return primary_value / secondary_value
-        else:
-            return "Divisão por zero não é permitida"
+import math
 
-    else:
-        return "Operação inválida"
+def calculator(operation, primary_value, secondary_value):
+    try:
+        if operation =='+':
+            return primary_value + secondary_value
+        elif operation =='-':
+            return primary_value - secondary_value
+        elif operation =='*':
+            return primary_value * secondary_value
+        elif operation =='/':
+            try:
+                return primary_value / secondary_value
+            except ZeroDivisionError:
+                return '\033[31;1mDivisão por zero não é permitida\033[0;0m'
+        elif operation == 'raiz':
+            return math.sqrt(primary_value)
+        elif operation == '%':
+            return (secondary_value / 100) * primary_value
+        else:
+            return "\033[31;1mOperação inválida\033[0;0m"
+    except (ValueError, ZeroDivisionError) as e:
+        return str(e)
 
 while True:
-    operation = input('Qual operação (+,-,*,/,%,raiz) você quer fazer ou \'q\' para sair ')
+    operation = input('Qual operação \033[34;1m(+,-,*,/,%,raiz)\033[0;0m você quer fazer ou \'q\' para sair: ')
     if operation == 'q':
         break
     elif operation in ('+', '-', '*', '/'):
@@ -23,19 +31,13 @@ while True:
             primary_value = float(input('Digite o primeiro número: '))
             secondary_value = float(input('Digite o segundo número: '))
         except ValueError:
-            print('Por favor, insira apenas números válidos.')
+            print('\033[31;1mPor favor, insira apenas números válidos.\033[0;0m')
             continue
         result = calculator(operation, primary_value, secondary_value)
-        print (f'Resultado: {result}')
+        print(f'Resultado: {result}')
     elif operation == 'raiz':
-        import math
-        num = float(input('Qual número desaja saber a raiz quadrada?'))
-        raiz = math.sqrt(num)
-        print(f'A raiz quadrada de {num} é {raiz}')
-    elif operation =='%':
-        value = float(input('Qual valor deseja saber a porcentagem:'))
-        porcent = float(input('Quantos porcento do valor deseja saber: '))/100
-        value_finish = porcent * value
-        print(f'{porcent} de {value} é: {value_finish}')
+        primary_value = float(input('Qual número desaja saber a raiz quadrada?'))
+        result = calculator(operation, primary_value, None)
+        print(f'A raiz quadrada de {primary_value} é {result}')
     else:
-        print('Por favor, insira apenas operações válidas')
+        print('\033[31;1mPor favor, insira apenas operações válidas\033[0;0m')
